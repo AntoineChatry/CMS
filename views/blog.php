@@ -3,7 +3,12 @@ session_start();
 require('connexion.php');
 require_once(realpath($_SERVER["DOCUMENT_ROOT"]) . '../controllers/UserController.php');
 ?>
-
+<?php
+echo'<header>
+<a href="/blog">Create posts</a>
+<a href="/logout">Logout</a>
+</header>';
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -20,51 +25,93 @@ require_once(realpath($_SERVER["DOCUMENT_ROOT"]) . '../controllers/UserControlle
 <!-- Get name of the user who commented the posts -->
 
 <?php
-	$requete = $bdd->query("SELECT * FROM blog");
-    $name = $bdd->query('SELECT name FROM membres');
+	$requete = $bdd->query("SELECT *  FROM blog ");
 
-echo '<table border= "1.5">';
+
+
 
 $i = 0;
-while($ligne = $requete->fetch() AND $ligne2 = $name->fetch() )
+while($ligne = $requete->fetch())
 {
     if($i==0){
         echo'<tr>';
     }
 
         echo '<td>
-        <img class="mini" src="'.$ligne['images'].'" />
-        <h3>'.$ligne['title'].'</h3>
-        <p>'.$ligne['content'].'</p>
-        <h4> Commentaires : </h4>
-        <p>'.$ligne['comment'].'</p>
-        <p> Commentaire écrit par: '.$ligne2['name'].'</p>
-              </td>';
+
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">'.$ligne['title'].'</h5>
+                <img src="'.$ligne['images'].'" alt="">
+                <p class="card-text">'. $ligne['content'].'</p>
+                <p class="card-text"> Ecrit le: '.$ligne['date'].'</p>
+                <p class="card-text"> Par: '.$ligne['author'].'</p>
+                
+            </div>
+        </div>';
+        if($_SESSION['name'] == $ligne['author']){
+            // Delete the post build in the database
+            echo'<form method="post">
+            <input type="hidden" name="id" value="'.$ligne['id'].'">
+            <input type="submit" name="submit" id="submit" value="Delete">
+            </form>';
+            if(isset($_POST['submit'])){
+                $id= $_POST['id'];
+                $sql = "DELETE FROM blog WHERE id = $id";
+                $result = $bdd->query($sql);
+
+                
+                header('Location: /blog');
+            }
+// Update form
+
+echo'<form method="post">
+<input type="hidden" name="id" value="'.$ligne['id'].'">
+<input type="submit" name="formsend" id="formsend" value="Update">
+</form>';
+if(isset($_POST['formsend'])){
+    $id= $_POST['id'];
+    $sql = "SELECT * FROM blog WHERE id = $id";
+    $result = $bdd->query($sql);
+    $ligne = $result->fetch();
+    echo'<form method="post">
+    <input type="hidden" name="id" value="'.$ligne['id'].'">
+    <input type="text" name="title" value="'.$ligne['title'].'">
+    <input type="text" name="content" value="'.$ligne['content'].'">
+    <input type="text" name="images" value="'.$ligne['images'].'">
+    <input type="submit" name="en" id="en" value="Apply">
+    </form>';
+    
+
+
+    if(isset($_POST['en'])){
+        $i= $_POST['id'];
+        $title = $_POST['title'];
+        $content = $_POST['content'];
+        $images = $_POST['images'];
+        $quer = $bdd->prepare("UPDATE blog SET title = :title, content = :content, images = :images WHERE id = $i");
+        $quer->bindParam(':title', $title);
+        $quer->bindParam(':content', $content);
+        $quer->bindParam(':images', $images);
+        $quer->execute();
+        header('Location: /blog');
+    }
+}
+            
+
+
+
+        }
+
+           echo'</td>';
         $i++;
     }
-echo'</table>';
 
 
-// Create posts and display the name of the author
+
 
     ?>
     
-    <div class="container">
-         <div class="row">
-             <div class="col-md-12">
-                 <div class="card">
-                     <div class="card-body">
-                         <h5 class="card-title">Commentaires</h5>
-                         <?php
-                         $req = $bdd->query('SELECT * FROM blog');
-                         $name = $bdd->query('SELECT name FROM membres');
-                         while ($data = $req->fetch() AND $data2 = $name->fetch()) {
-                             ?>
-                             <p class="card-text"><?= $data['comment'] ?></p>
-                                <p class="card-text"><?= $data2['name'] ?></p>
-                                             <?php
-    }
-                       ?>
-                   </div>
 </body>
 </html>
+

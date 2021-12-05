@@ -1,17 +1,19 @@
 <?php 
 session_start();
-//  if admin = 1 then show admin page
-if(isset($_SESSION['admin']) && $_SESSION['admin'] == 1){
-    header('Location: /admin');
+//if session name = antoine, display admin page
+if(isset($_SESSION['name']) == 'Antoine'){
+    echo '<h1>Admin Page</h1>';
+    echo'<header>
+    <a href="/blog/post">Blog</a>
+    <a href="/blog">Create posts</a>
+    <a href="/logout">Logout</a>
+    </header>';
 }
 else{
     header('Location: /blog');
 }
 require_once ('connexion.php');
-// ^display only user who get admin status == 1
-$sql = "SELECT * FROM membres WHERE admin = 1";
-$req = $bdd->query($sql);
-$users = $req->fetchAll();
+
 
 
 ?>
@@ -21,81 +23,42 @@ $users = $req->fetchAll();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <title>Admin</title>
 </head>
 <body>
-    <h1>Admin</h1>
     <table>
-        <tr>
-            <th>id</th>
-            <th>username</th>
-            <th>email</th>
-            <th>password</th>
-            <th>admin</th>
-            <th>status</th>
-            <th>date</th>
-            <th>action</th>
-        </tr>
-        <?php while($row = $result->fetch_assoc()): ?>
-        <tr>
-            <td><?= $row['id'] ?></td>
-            <td><?= $row['username'] ?></td>
-            <td><?= $row['email'] ?></td>
-            <td><?= $row['password'] ?></td>
-            <td><?= $row['admin'] ?></td>
-            <td><?= $row['status'] ?></td>
-            <td><?= $row['date'] ?></td>
-            <td>
-                <a href="edit.php?id=<?= $row['id'] ?>">Edit</a>
-                <a href="delete.php?id=<?= $row['id'] ?>">Delete</a>
+        <?php 
+        $sql = "SELECT * FROM membres WHERE admin = 1";
+        $req = $bdd->query($sql);
+        $users = $req->fetchAll();
+        echo'<table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Image</th>
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Admin</th>
+          </tr>
+        </thead>
+        <tbody>';
+        foreach($users as $user){
+          echo'<tr>
+            <th scope="row">1</th>
+            <td><img src="https://www.gravatar.com/avatar/" alt="User img" style="height: 40px; width: 40px;"></td>
+            <td>'.$user['name'].'</td>
+            <td>'.$user['email'].'</td>
+            <td>'.$user['admin'].'</td>
+          </tr>
+        </tbody>
+      </table>';
+            
+            echo '</tr>';
+        }
+        ?>
             </td>
-        </tr>
-        <?php endwhile ?>
+       
     </table>
-    <a href="logout.php">Logout</a>
 </body>
 </html>
-
-?>
-
-<!-- PHP admin dashboard -->
-<div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="page-header">
-                <h1>Admin Dashboard</h1>
-            </div>
-            <p class="lead">Welcome to the admin dashboard.</p>
-        </div>
-    </div>
-</div>
-<!-- Display Admin row -->
-<div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Admin Details</h3>
-                </div>
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="col-md-3 col-lg-3 text-center"> <img alt="User Pic" src="https://lh5.googleusercontent.com/-b0-k99FZlyE/AAAAAAAAAAI/AAAAAAAAAAA/eu7opA4byxI/photo.jpg?sz=100" class="img-circle"> </div>
-                        <div class=" col-md-9 col-lg-9 ">
-                            <table class="table table-user-information">
-                                <tbody>
-                                    <tr>
-                                        <td>User Name:</td>
-                                        <td><?php echo $user_data['name']; ?></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Email:</td>
-                                        <td><?php echo $user_data['email']; ?></td>
-                                    </tr>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- End of PHP admin dashboard -->

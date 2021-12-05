@@ -4,6 +4,7 @@
 class UserController {
     public static function index()
     {
+        session_start();
         $error = NULL;
         if (!empty($_POST['password'])&& !empty($_POST['name'])&& !empty($_POST['email']) 
  		&& !empty($_POST['cpassword'])) {
@@ -29,6 +30,7 @@ class UserController {
 }
 public static function login()
 {
+    session_start();
     $error = NULL;
     if (!empty($_POST['password'])&& !empty($_POST['name'])) {
         
@@ -51,18 +53,22 @@ public static function login()
 }
 
 public static function create_posts(){
+    session_start();
     $error = NULL;
     if (!empty($_POST['title'])&& !empty($_POST['content'])) {
         $title = filter_input(INPUT_POST, "title");
         $content = filter_input(INPUT_POST, "content");
         $image = filter_input(INPUT_POST, "image");
-        
+        $date = date("Y-m-d H:i:s");
+        $author = $_SESSION['name'];
 
         if ($title && $content && $image) {
             $title = htmlspecialchars($title);
             $content = htmlspecialchars($content);
             $image = htmlspecialchars($image);
-            insert_posts($title,$content, $image);
+            $date = htmlspecialchars($date);
+            $author = htmlspecialchars($author);
+            insert_posts($title,$content, $image , $date, $author);
             echo "Post créé";
         } else {
             $error = "Il manque des informations";
@@ -75,7 +81,7 @@ public static function create_posts(){
 }
 // function getUsername by session_id
 public static function getUsername(){
-
+    session_start();
     $error = NULL;
     if (!empty($_POST['comment'])) {
         $comment = filter_input(INPUT_POST, "comment");

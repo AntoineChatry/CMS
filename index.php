@@ -23,5 +23,11 @@ switch ($request) {
     case '/admin' :
         require __DIR__ . '/views/admin.php';
         break;
+    case '/logout' :
+        require __DIR__ . '/views/logout.php';
+    break;
+    case '/delete' :
+        require __DIR__ . '/views/delete.php';
+    break;
 }
  ?>

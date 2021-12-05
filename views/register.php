@@ -1,5 +1,4 @@
 <?php
-session_start();
 
 // import index function from UserController
 require_once(realpath($_SERVER["DOCUMENT_ROOT"]) . '../controllers/UserController.php');
@@ -20,7 +19,7 @@ require_once(realpath($_SERVER["DOCUMENT_ROOT"]) . '../controllers/UserControlle
                 <h1 class="text-center">Register</h1>
                 <form method="post">
                     <div class="form-group">
-                        <label for="name">name</label>
+                        <label for="name">Name</label>
                         <input type="text" name="name" id="name" class="form-control">
                     </div>
                     <div class="form-group">
@@ -35,11 +34,10 @@ require_once(realpath($_SERVER["DOCUMENT_ROOT"]) . '../controllers/UserControlle
                         <label for="email">Email</label>
                         <input type="email" name="email" id="email" class="form-control">
                     </div>
-	<input type="submit" name="formsend" id="formsend" value="S'inscrire">
+	<input type="submit" name="formsend" id="formsend" value="Register">
 	<br>
-	<a href="/">Connectez-vous</a>
+	<a href="/">Login</a>
 
-<!-- import function index -->
 <?php 
 UserController::index();
 ?>

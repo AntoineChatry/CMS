@@ -1,10 +1,7 @@
 <?php
-session_start();
 // require('connexion.php');
-// import index function from UserController
 
 require_once(realpath($_SERVER["DOCUMENT_ROOT"]) . '../controllers/UserController.php');
-// Session name  == name from membres table
 
 
 

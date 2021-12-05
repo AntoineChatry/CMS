@@ -1,21 +1,3 @@
-# Réécriture l'URL
-# RewriteEngine on
-# RewriteBase /hetic-web22/mvc/
-
-# La prochaine règle s'applique si et seulement
-# si le fichier n'existe pas réellement
-# RewriteCond %{REQUEST_FILENAME} !-f
-# RewriteRule : Règle de Réécriture
-# Le principe : Si l'expression règulière à gauche
-# correspond, on réécrit en ce qu'il y a à droite
-# Gauche : ^(.*)$ -> Tout et n'importe quoi
-# Droite : index.php
-# On réécrit tout et n'importe quoi en index.php
-# NC : NoCase : insensible à la casse
-# L : Last : On fait rien après, on arrête tout
-# Le $1 signifie "ce qui a été attrapé à gauche"
-# RewriteRule ^(.*)$ index.php?page=$1 [NC,L]
-
 RewriteEngine On
 RewriteBase /
 RewriteCond %{REQUEST_FILENAME} !-d
